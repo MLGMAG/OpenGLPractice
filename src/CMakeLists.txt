@@ -9,3 +9,6 @@ target_link_libraries(initGlew ${CONAN_LIBS})
 
 add_executable(glVersion glVersion/glVersion.cpp)
 target_link_libraries(glVersion ${CONAN_LIBS})
+
+add_executable(triangle triangle/triangle.cpp)
+target_link_libraries(triangle ${CONAN_LIBS})
