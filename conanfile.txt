@@ -1,5 +1,5 @@
 [requires]
-glad/0.1.34
+glew/2.2.0
 glfw/3.3.4
 
 [generators]
