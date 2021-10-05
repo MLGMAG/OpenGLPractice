@@ -60,7 +60,7 @@ int main() {
     if (glewInit() != GLEW_OK)
         return -1;
 
-    float positions[6] = {
+    std::vector<float> positions = {
             -0.5f, -0.5f,
             0.0f, 0.5f,
             0.5f, -0.5f
@@ -73,7 +73,7 @@ int main() {
     /* Select current buffer */
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     /* Set data to buffer */
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), &positions.front(), GL_STATIC_DRAW);
 
     /* specify type of data */
     glEnableVertexAttribArray(0);
