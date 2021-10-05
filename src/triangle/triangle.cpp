@@ -40,6 +40,17 @@ GLFWwindow *createWindow(const GLint &width, const GLint &height, const string &
     return window;
 }
 
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow *window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
+}
+
+
 int main() {
     if (!glfwInit()) {
         return -1;
@@ -47,6 +58,7 @@ int main() {
 
     GLFWwindow *window = createWindow(WIDTH, HEIGHT, TITLE);
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     if (glewInit() != GLEW_OK) {
         return -1;
@@ -76,6 +88,7 @@ int main() {
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
+        processInput(window);
 
         glClearColor(1.0f, 0.647f, 0.0f, 1.0f);
         glDrawArrays(GL_TRIANGLES, 0, 3);
