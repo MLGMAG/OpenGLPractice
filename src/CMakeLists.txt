@@ -10,5 +10,12 @@ target_link_libraries(initGlew ${CONAN_LIBS})
 add_executable(glVersion glVersion/glVersion.cpp)
 target_link_libraries(glVersion ${CONAN_LIBS})
 
+include_directories(api/shaderApi)
+add_library(
+        shaderApi STATIC
+        api/shaderApi/shaderApi.h
+        api/shaderApi/shaderApi.cpp
+)
+
 add_executable(triangle triangle/triangle.cpp)
-target_link_libraries(triangle ${CONAN_LIBS})
+target_link_libraries(triangle PRIVATE ${CONAN_LIBS} shaderApi)
