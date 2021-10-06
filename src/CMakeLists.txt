@@ -19,3 +19,6 @@ add_library(
 
 add_executable(triangle triangle/triangle.cpp)
 target_link_libraries(triangle PRIVATE ${CONAN_LIBS} shaderApi)
+
+add_executable(square square/square.cpp)
+target_link_libraries(square PRIVATE ${CONAN_LIBS} shaderApi)
