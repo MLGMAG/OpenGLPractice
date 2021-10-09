@@ -1,8 +1,18 @@
 #include "shaderApi.h"
 #include <GL/glew.h>
 #include <iostream>
+#include <fstream>
+#include <filesystem>
 
 using namespace std;
+
+string readFromFile(const string &filePath) {
+    std::stringstream buffer;
+    if (ifstream myFile(filePath); myFile.is_open()) {
+        buffer << myFile.rdbuf();
+    }
+    return buffer.str();
+}
 
 unsigned int ShaderUtils::CompileShader(unsigned int type, const string &source) {
     unsigned int id = glCreateShader(type);
@@ -41,4 +51,12 @@ unsigned int ShaderUtils::CreateShader(const string &vertexShader, const string 
     glDeleteShader(vs);
     glDeleteShader(fs);
     return program;
+}
+
+unsigned int
+ShaderUtils::CreateShaderFromFiles(const string &vertexShaderFilePath, const string &fragmentShaderFilePath) {
+    string vertexShaderSource = readFromFile(vertexShaderFilePath);
+    string fragmentShaderSource = readFromFile(fragmentShaderFilePath);
+
+    return CreateShader(vertexShaderSource, fragmentShaderSource);
 }
