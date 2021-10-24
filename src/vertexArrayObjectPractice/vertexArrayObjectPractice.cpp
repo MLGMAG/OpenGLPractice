@@ -1,3 +1,8 @@
+// Main feature of Vertex Array Object is the idea of reusing them. \
+So that you do not need to reconfigure vertex buffer object (VBO) \
+every time you want to draw something.
+
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "shaderApi.h"
