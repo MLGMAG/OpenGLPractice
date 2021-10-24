@@ -24,3 +24,7 @@ add_executable(square square/square.cpp)
 target_link_libraries(square PRIVATE ${CONAN_LIBS} shaderApi)
 
 add_subdirectory(catInOrange)
+
+# Vertex Array Object Practice
+add_executable(vertexArrayObjectPractice vertexArrayObjectPractice/vertexArrayObjectPractice.cpp)
+target_link_libraries(vertexArrayObjectPractice PRIVATE ${CONAN_LIBS} shaderApi)
