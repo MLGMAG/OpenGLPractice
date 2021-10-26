@@ -32,3 +32,7 @@ target_link_libraries(vertexArrayObjectPractice PRIVATE ${CONAN_LIBS} shaderApi)
 # Element Buffer Object Practice
 add_executable(elementBufferObjectPractice elementBufferObjectPractice/elementBufferObjectPractice.cpp)
 target_link_libraries(elementBufferObjectPractice PRIVATE ${CONAN_LIBS} shaderApi)
+
+# Uniform Practice
+add_executable(uniform uniform/uniform.cpp)
+target_link_libraries(uniform PRIVATE ${CONAN_LIBS} shaderApi)
