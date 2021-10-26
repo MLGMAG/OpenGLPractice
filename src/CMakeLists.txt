@@ -36,3 +36,7 @@ target_link_libraries(elementBufferObjectPractice PRIVATE ${CONAN_LIBS} shaderAp
 # Uniform Practice
 add_executable(uniform uniform/uniform.cpp)
 target_link_libraries(uniform PRIVATE ${CONAN_LIBS} shaderApi)
+
+# Layout Practice
+add_executable(layout layout/layout.cpp)
+target_link_libraries(layout PRIVATE ${CONAN_LIBS} shaderApi)
