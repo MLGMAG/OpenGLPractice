@@ -40,3 +40,7 @@ target_link_libraries(uniform PRIVATE ${CONAN_LIBS} shaderApi)
 # Layout Practice
 add_executable(layout layout/layout.cpp)
 target_link_libraries(layout PRIVATE ${CONAN_LIBS} shaderApi)
+
+# Inverted Triangle
+add_executable(invertedTriangle invertedTriangle/invertedTriangle.cpp)
+target_link_libraries(invertedTriangle PRIVATE ${CONAN_LIBS} shaderApi)
