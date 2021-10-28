@@ -2,6 +2,7 @@
 glew/2.2.0
 glfw/3.3.4
 stb/cci.20210713
+glm/0.9.9.8
 
 [generators]
 cmake

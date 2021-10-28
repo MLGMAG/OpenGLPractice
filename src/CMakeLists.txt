@@ -58,3 +58,7 @@ target_link_libraries(texturesApiTest PRIVATE ${CONAN_LIBS})
 # Texture triangle
 add_executable(textureBox textureBox/textureTriangle.cpp)
 target_link_libraries(textureBox PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
+
+# Matrix Math
+add_executable(matrixMath matrixMath/matrixMath.cpp)
+target_link_libraries(matrixMath PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
