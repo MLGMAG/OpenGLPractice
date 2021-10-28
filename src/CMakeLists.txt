@@ -44,3 +44,17 @@ target_link_libraries(layout PRIVATE ${CONAN_LIBS} shaderApi)
 # Inverted Triangle
 add_executable(invertedTriangle invertedTriangle/invertedTriangle.cpp)
 target_link_libraries(invertedTriangle PRIVATE ${CONAN_LIBS} shaderApi)
+
+# Textures Api
+include_directories(api/texturesApi)
+add_library(
+        texturesApi STATIC
+        api/texturesApi/texturesApi.h
+        api/texturesApi/texturesApi.cpp
+)
+add_executable(texturesApiTest api/texturesApi/texturesApi.cpp api/texturesApi/texturesApi.h)
+target_link_libraries(texturesApiTest PRIVATE ${CONAN_LIBS})
+
+# Texture triangle
+add_executable(textureBox textureBox/textureTriangle.cpp)
+target_link_libraries(textureBox PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
