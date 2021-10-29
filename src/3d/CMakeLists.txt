@@ -9,3 +9,7 @@ target_link_libraries(cube PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
 # Cubes
 add_executable(cubes cubes/cubes.cpp)
 target_link_libraries(cubes PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
+
+# Round Camera
+add_executable(roundCamera roundCamera/roundCamera.cpp)
+target_link_libraries(roundCamera PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
