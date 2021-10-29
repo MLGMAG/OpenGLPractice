@@ -16,3 +16,5 @@ add_executable(texturesApiTest api/texturesApi/texturesApi.cpp api/texturesApi/t
 target_link_libraries(texturesApiTest PRIVATE ${CONAN_LIBS})
 
 add_subdirectory(2d)
+
+add_subdirectory(3d)
