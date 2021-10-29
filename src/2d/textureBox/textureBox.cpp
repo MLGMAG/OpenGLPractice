@@ -128,9 +128,9 @@ int main() {
     glUseProgram(shader);
 
     unsigned int texture1 = bindTextureRGB(
-            "/home/mlgmag/CLionProjects/graphicsLabs/src/textureBox/img/container.jpg");
+            "/home/mlgmag/CLionProjects/graphicsLabs/src/resources/img/container.jpg");
     unsigned int texture2 = bindTextureRGBA(
-            "/home/mlgmag/CLionProjects/graphicsLabs/src/textureBox/img/awesomeface.png");
+            "/home/mlgmag/CLionProjects/graphicsLabs/src/resources/img/awesomeface.png");
 
     int texture1UniformLocation = glGetUniformLocation(shader, "texture1");
     glUniform1i(texture1UniformLocation, 0);

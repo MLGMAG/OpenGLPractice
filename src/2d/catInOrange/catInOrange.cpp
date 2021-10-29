@@ -214,11 +214,11 @@ vector<unsigned int> getIndices() {
 }
 
 string getVertexShaderSourceFilepath() {
-    static string filePath = "/home/mlgmag/CLionProjects/graphicsLabs/src/catInOrange/shaders/vertex.shader";
+    static string filePath = "/home/mlgmag/CLionProjects/graphicsLabs/src/resources/shaders/vertex.shader";
     return filePath;
 }
 
 string getFragmentShaderSourceFilepath() {
-    static string filePath = "/home/mlgmag/CLionProjects/graphicsLabs/src/catInOrange/shaders/fragment.shader";
+    static string filePath = "/home/mlgmag/CLionProjects/graphicsLabs/src/resources/shaders/fragment.shader";
     return filePath;
 }
