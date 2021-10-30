@@ -2,9 +2,13 @@
 add_executable(buttonBox buttonBox/buttonBox.cpp)
 target_link_libraries(buttonBox PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
 
-# Cube
-add_executable(cube cube/cube.cpp)
-target_link_libraries(cube PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
+# Color cube
+add_executable(colorCube cube/colorCube.cpp)
+target_link_libraries(colorCube PRIVATE ${CONAN_LIBS} shaderApi)
+
+# Texture cube
+add_executable(textureCube cube/textureCube.cpp)
+target_link_libraries(textureCube PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
 
 # Cubes
 add_executable(cubes cubes/cubes.cpp)
