@@ -49,3 +49,7 @@ target_link_libraries(matrixMath PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
 # Transformation Practice
 add_executable(transformation transformation/transformation.cpp)
 target_link_libraries(transformation PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
+
+# Plot
+add_executable(plot plot/plot.cpp)
+target_link_libraries(plot PRIVATE ${CONAN_LIBS} shaderApi)
