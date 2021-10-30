@@ -53,3 +53,7 @@ target_link_libraries(transformation PRIVATE ${CONAN_LIBS} shaderApi texturesApi
 # Plot
 add_executable(plot plot/plot.cpp)
 target_link_libraries(plot PRIVATE ${CONAN_LIBS} shaderApi)
+
+# Triangle plot
+add_executable(trianglePlot plot/trianglePlot.cpp)
+target_link_libraries(trianglePlot PRIVATE ${CONAN_LIBS} shaderApi)
