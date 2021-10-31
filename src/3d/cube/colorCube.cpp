@@ -5,9 +5,13 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
+
+
+struct GraphicContext {
+    GLFWwindow *window;
+};
 
 const GLint WIDTH = 640;
 const GLint HEIGHT = 480;
@@ -104,6 +108,40 @@ unsigned int generateCubeVertexArray() {
     return vertexArray;
 }
 
+void graphicLogic(const GraphicContext &context) {
+    unsigned int cubeVertexArray = generateCubeVertexArray();
+
+    ShaderProgram shaderProgram = ShaderProgram::createShaderProgramFromStrings(VERTEX_SHADER, FRAGMENT_SHADER);
+    shaderProgram.use();
+
+    auto view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    shaderProgram.setMat4("view", view);
+
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    shaderProgram.setMat4("projection", projection);
+
+    glEnable(GL_DEPTH_TEST);
+
+    while (!glfwWindowShouldClose(context.window)) {
+        processInput(context.window);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        auto model = glm::mat4(1.0f);
+        model = glm::rotate(model, (float) glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+        shaderProgram.setMat4("model", model);
+
+        glBindVertexArray(cubeVertexArray);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
+
+        glfwSwapBuffers(context.window);
+
+        glfwPollEvents();
+    }
+}
+
 int main() {
     if (!glfwInit()) {
         return -1;
@@ -117,43 +155,8 @@ int main() {
         return -1;
     }
 
-    unsigned int cubeVertexArray = generateCubeVertexArray();
-
-    unsigned int shader = ShaderUtils::CreateShader(VERTEX_SHADER, FRAGMENT_SHADER);
-    glUseProgram(shader);
-
-    auto view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    int viewLocation = glGetUniformLocation(shader, "view");
-    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    int projectionLocation = glGetUniformLocation(shader, "projection");
-    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
-
-    int modelLocation = glGetUniformLocation(shader, "model");
-
-    glEnable(GL_DEPTH_TEST);
-
-    while (!glfwWindowShouldClose(window)) {
-        processInput(window);
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        auto model = glm::mat4(1.0f);
-        model = glm::rotate(model, (float) glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-        glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-        glBindVertexArray(cubeVertexArray);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
-
-        glfwSwapBuffers(window);
-
-        glfwPollEvents();
-    }
-
-    glDeleteProgram(shader);
+    GraphicContext graphicContext{window};
+    graphicLogic(graphicContext);
 
     glfwTerminate();
     return 0;
@@ -206,7 +209,7 @@ vector<unsigned int> getCubeIndices() {
 }
 
 string getTitle() {
-    string title = "Cube";
+    string title = "Color cube";
 
     return title;
 }
