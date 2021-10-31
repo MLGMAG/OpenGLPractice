@@ -25,3 +25,7 @@ target_link_libraries(cameraWASD PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
 # Camera mouse
 add_executable(cameraMouse cameraMouse/cameraMouse.cpp)
 target_link_libraries(cameraMouse PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
+
+# Color cube camera
+add_executable(colorCubeCamera colorCubeCamera/colorCubeCamera.cpp)
+target_link_libraries(colorCubeCamera PRIVATE ${CONAN_LIBS} shaderApi cameraApi)
