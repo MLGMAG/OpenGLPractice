@@ -29,6 +29,8 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 
+glm::mat4 projection;
+
 string getTitle();
 
 vector<float> getCubePositions();
@@ -95,6 +97,14 @@ void processInput(GLFWwindow *window) {
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+        projection = glm::ortho(-(WIDTH / 256.0f), WIDTH / 256.0f,
+                                -(HEIGHT / 256.0f), (HEIGHT / 256.0f),
+                                -1000.0f, 1000.0f);
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
+                                      100.0f);
 }
 
 unsigned int generateCubeVertexArray() {
@@ -314,6 +324,59 @@ GraphData generateGraph2VertexArray() {
     return {vertexArray, vertexToDraw};
 }
 
+GraphData generateTorusVertexArray(double r = 0.07, double c = 0.15, int rSeg = 16, int cSeg = 36) {
+    vector<float> positions;
+
+    const double PI = 3.1415926535897932384626433832795;
+    const double TAU = 2 * PI;
+
+    for (int i = 0; i < 64; i++) {
+        for (int j = 0; j <= cSeg; j++) {
+            for (int k = 0; k <= 1; k++) {
+                double s = (i + k) % rSeg + 0.5;
+                double t = j % (cSeg + 1);
+
+                double x = (c + r * cos(s * TAU / rSeg)) * cos(t * TAU / cSeg);
+                double y = (c + r * cos(s * TAU / rSeg)) * sin(t * TAU / cSeg);
+                double z = r * sin(s * TAU / rSeg);
+
+                positions.push_back(2 * x);
+                positions.push_back(2 * y);
+                positions.push_back(2 * z);
+                positions.push_back(0.0f);
+                positions.push_back(1.0f);
+                positions.push_back(0.0f);
+            }
+        }
+    }
+
+    int vertexCount = positions.size() / 6;
+
+    unsigned int vertexArray;
+    unsigned int vertexBuffer;
+
+    glGenVertexArrays(1, &vertexArray);
+    glGenBuffers(1, &vertexBuffer);
+
+    glBindVertexArray(vertexArray);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    unsigned long vertexBufferSize = positions.size() * sizeof(float);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<long> (vertexBufferSize), &positions.front(), GL_STATIC_DRAW);
+
+    int strideSize = 6 * sizeof(float);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, strideSize, nullptr);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, strideSize, (void *) (3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    return {vertexArray, vertexCount};
+}
+
 void graphicLogic(const GraphicContext &context) {
     ShaderProgram shaderProgram = ShaderProgram::createShaderProgramFromStrings(VERTEX_SHADER, FRAGMENT_SHADER);
     shaderProgram.use();
@@ -322,6 +385,9 @@ void graphicLogic(const GraphicContext &context) {
 
     GraphData graphic1Data = generateGraph1VertexArray();
     GraphData graphic2Data = generateGraph2VertexArray();
+    GraphData torusData = generateTorusVertexArray();
+
+    projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f, 100.0f);
 
     while (!glfwWindowShouldClose(context.window)) {
         float currentFrame = glfwGetTime();
@@ -330,8 +396,6 @@ void graphicLogic(const GraphicContext &context) {
 
         processInput(context.window);
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
-                                                100.0f);
         shaderProgram.setMat4("projection", projection);
 
         glm::mat4 view = camera.GetViewMatrix();
@@ -372,6 +436,14 @@ void graphicLogic(const GraphicContext &context) {
         glBindVertexArray(graphic2Data.vertexArray);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawArrays(GL_TRIANGLES, 0, graphic2Data.vertexToDraw);
+
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+        shaderProgram.setMat4("model", model);
+        glBindVertexArray(torusData.vertexArray);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glDrawArrays(GL_LINE_STRIP, 0, torusData.vertexToDraw);
 
         glfwSwapBuffers(context.window);
 
@@ -450,7 +522,7 @@ vector<unsigned int> getCubeIndices() {
 }
 
 string getTitle() {
-    string title = "Color Cube Camera";
+    string title = "Lab 2";
 
     return title;
 }
