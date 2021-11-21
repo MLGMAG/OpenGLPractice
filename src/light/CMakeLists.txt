@@ -9,3 +9,7 @@ target_link_libraries(phongLightningAmbient PRIVATE ${CONAN_LIBS} shaderApi came
 # Phong Light. Diffuse
 add_executable(phongLightningDiffuse phongLightning/diffuse/diffuse.cpp)
 target_link_libraries(phongLightningDiffuse PRIVATE ${CONAN_LIBS} shaderApi cameraApi)
+
+# Phong Light. Specular
+add_executable(phongLightningSpecular phongLightning/specular/specular.cpp)
+target_link_libraries(phongLightningSpecular PRIVATE ${CONAN_LIBS} shaderApi cameraApi)

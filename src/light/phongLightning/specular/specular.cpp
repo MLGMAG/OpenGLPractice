@@ -28,7 +28,9 @@ string getTitle();
 
 vector<float> getCubePositions();
 
-vector<unsigned int> getCubeIndices();
+vector<float> getPlatePositions();
+
+vector<unsigned int> getPlateIndices();
 
 string getDefaultVertexShaderPath();
 
@@ -102,17 +104,40 @@ unsigned int generateCubeVertexArray() {
     return vertexArray;
 }
 
-glm::vec3 getLightColor() {
-    double lightValue = (sin(glfwGetTime() + M_PI_2) + 1) / 2;
+unsigned int generatePlateVertexArray() {
+    vector<float> positions = getPlatePositions();
+    vector<unsigned int> indices = getPlateIndices();
 
-    if (lightValue < 0.1) {
-        lightValue = 0.1;
-    }
+    unsigned int vertexArray;
+    unsigned int vertexBuffer;
+    unsigned int elementBuffer;
 
-    auto r = static_cast<float>(lightValue);
-    auto g = static_cast<float>(lightValue);
-    auto b = static_cast<float>(lightValue);
-    return {r, g, b};
+    glGenVertexArrays(1, &vertexArray);
+    glGenBuffers(1, &vertexBuffer);
+    glGenBuffers(1, &elementBuffer);
+
+    glBindVertexArray(vertexArray);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    unsigned long vertexBufferSize = positions.size() * sizeof(float);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<long> (vertexBufferSize), &positions.front(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+    unsigned long elementBufferSize = indices.size() * sizeof(unsigned int);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<long> (elementBufferSize), &indices.front(), GL_STATIC_DRAW);
+
+    int strideSize = 6 * sizeof(float);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, strideSize, nullptr);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, strideSize, (void *) (3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    return vertexArray;
 }
 
 void graphicLogic(const GraphicContext &context) {
@@ -122,6 +147,7 @@ void graphicLogic(const GraphicContext &context) {
                                                                                      getDefaultFragmentShaderPath());
 
     unsigned int cubeVertexArray = generateCubeVertexArray();
+    unsigned int plateVertexArray = generatePlateVertexArray();
 
     glm::vec3 objColor(1.0f, 0.5f, 0.31f);
     glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
@@ -131,8 +157,7 @@ void graphicLogic(const GraphicContext &context) {
         processInput(context.window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-        // Drawing of normal cube
+        // Drawing plate
         defaultShaderProgram.use();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIDTH / (float) HEIGHT, 0.1f,
                                                 100.0f);
@@ -142,15 +167,16 @@ void graphicLogic(const GraphicContext &context) {
         defaultShaderProgram.setMat4("view", view);
 
         auto model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(2.0f, 2.0f, -2.0f));
+        model = glm::translate(model, glm::vec3(0.0f, -5.0f, 0.0f));
         defaultShaderProgram.setMat4("model", model);
 
         defaultShaderProgram.setVec3("objectColor", objColor);
         defaultShaderProgram.setVec3("lightColor", lightColor);
         defaultShaderProgram.setVec3("lightPos", glm::vec3(0.0f, 0.0f, 0.0f));
+        defaultShaderProgram.setVec3("viewPos", camera.Position);
 
-        glBindVertexArray(cubeVertexArray);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(plateVertexArray);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         // Drawing of light cube
         lightSourceShaderProgram.use();
@@ -245,6 +271,25 @@ vector<float> getCubePositions() {
     return positions;
 }
 
+vector<float> getPlatePositions() {
+    vector<float> positions = {
+            5.0f, 0.0f, 5.0f, 0.0f, 1.0f, 0.0f,
+            5.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f,
+            -5.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f,
+            -5.0f, 0.0f, 5.0f, 0.0f, 1.0f, 0.0f
+    };
+
+    return positions;
+}
+
+vector<unsigned int> getPlateIndices() {
+    vector<unsigned int> indices = {
+            0, 1, 3,
+            1, 2, 3
+    };
+    return indices;
+}
+
 string getTitle() {
     string title = "Blinking Colored Cubes";
 
@@ -267,13 +312,14 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 }
 
 string getDefaultVertexShaderPath() {
-    return "/home/mlgmag/CLionProjects/graphicsLabs/src/light/phongLightning/diffuse/shaders/defaultVertex.shader";
+    return "/home/mlgmag/CLionProjects/graphicsLabs/src/light/phongLightning/specular/shaders/defaultVertex.shader";
 }
 
 string getDefaultFragmentShaderPath() {
-    return "/home/mlgmag/CLionProjects/graphicsLabs/src/light/phongLightning/diffuse/shaders/defaultFragment.shader";
+    return "/home/mlgmag/CLionProjects/graphicsLabs/src/light/phongLightning/specular/shaders/defaultFragment.shader";
+
 }
 
 string getLightSourceFragmentShaderPath() {
-    return "/home/mlgmag/CLionProjects/graphicsLabs/src/light/phongLightning/diffuse/shaders/lightSourceFragment.shader";
+    return "/home/mlgmag/CLionProjects/graphicsLabs/src/light/phongLightning/specular/shaders/lightSourceFragment.shader";
 }
