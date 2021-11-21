@@ -28,3 +28,5 @@ target_link_libraries(cameraApiTest PRIVATE ${CONAN_LIBS} shaderApi texturesApi)
 add_subdirectory(2d)
 
 add_subdirectory(3d)
+
+add_subdirectory(light)
