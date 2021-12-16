@@ -17,3 +17,7 @@ target_link_libraries(phongLightningSpecular PRIVATE ${CONAN_LIBS} shaderApi cam
 # Phong Full
 add_executable(phongLightningFull phongLightning/full/full.cpp)
 target_link_libraries(phongLightningFull PRIVATE ${CONAN_LIBS} shaderApi cameraApi)
+
+# Planet
+add_executable(planet planet/planet.cpp)
+target_link_libraries(planet PRIVATE ${CONAN_LIBS} shaderApi cameraApi modelApi)
